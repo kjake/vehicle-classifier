@@ -3,7 +3,6 @@ import json
 import torch
 from torch import nn
 from torchvision import models
-from PIL import Image
 import numpy as np
 
 device = torch.device("cpu")
@@ -32,17 +31,11 @@ else:
 model = model.to(device)
 model.eval()
 
-bird_name_map = idx_to_class
+label_name_map = idx_to_class
 
 input_shape = (1, 3, 224, 224)
 
-img = Image.open('american-goldfinch.png')
-img = img.convert("RGB")
-img = img.resize((input_shape[2], input_shape[3]))
-
-img = np.expand_dims(img, axis=0)
-img = img.transpose((0, 3, 1, 2))  # BHWC to BCHW, (n, 3, h, w)
-img = img.astype(np.float32) / 255.0
+img = np.zeros(input_shape, dtype=np.float32)
 
 stats = ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 mean = np.array(stats[0]).astype(np.float32)
@@ -58,7 +51,7 @@ traced_model.eval()
 output_data = traced_model(example_input)
 o = output_data[0].softmax(dim=0)
 result = torch.max(o, dim=0)
-label = bird_name_map[str(result.indices.item())]
+label = label_name_map[str(result.indices.item())]
 print(f"Predicted label: {label}")
 
 model_config = {
@@ -68,7 +61,7 @@ model_config = {
     "std": stats[1],
     "files": [
     ],
-    "labels": bird_name_map,
+    "labels": label_name_map,
 }
 
 def export_openvino():

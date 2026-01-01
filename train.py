@@ -15,6 +15,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # --- Add this at the top ---
 parser = argparse.ArgumentParser()
 parser.add_argument('--resume', type=str, default=None, help='Path to checkpoint to resume from')
+parser.add_argument('--data-dir', type=str, default='vehicle-dataset', help='Path to ImageFolder dataset root')
 args = parser.parse_args()
 
 # Hyperparameters
@@ -50,11 +51,11 @@ val_transform = transforms.Compose([
 
 # Datasets
 train_dataset = torchvision.datasets.ImageFolder(
-    root='/mnt/scrypted-nvr/birds/nabirds-dataset/train',
+    root=os.path.join(args.data_dir, 'train'),
     transform=train_transform
 )
 val_dataset = torchvision.datasets.ImageFolder(
-    root='/mnt/scrypted-nvr/birds/nabirds-dataset/test',
+    root=os.path.join(args.data_dir, 'test'),
     transform=val_transform
 )
 

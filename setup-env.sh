@@ -5,5 +5,5 @@ then
 fi
 
 . .venv/bin/activate
-# needed for export
-pip install openvino coremltools ncnn pnnx onnx
+# needed for dataset export and model export
+pip install datasets openvino coremltools ncnn pnnx onnx

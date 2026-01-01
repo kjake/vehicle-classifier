@@ -1,19 +1,35 @@
-# Bird Classification Model
+# Vehicle Classification Model
 
-This bird classification model was trained using the NABirds Dataset from Cornell Lab of Ornithology.
+This vehicle classification model uses the DrBimmer vehicle classification dataset hosted on Hugging Face.
 
-https://dl.allaboutbirds.org/nabirds
+https://huggingface.co/datasets/DrBimmer/vehicle-classification
 
-* nabirds.py - Convert the dataset to something that can be consumed by Torch. This creates a compatibile folder structure, merges male/female/juvenile folders, and crops the targets for use in a Resnet.
-* train.py - Simple resnet50 trainer. Supports resume.
+* vehicle_dataset.py - Download the dataset from Hugging Face and export it to an ImageFolder layout for PyTorch.
+* train.py - Simple ResNet50 trainer. Supports resume.
 * infer.py - Infer a single image given a checkpoint.
 * export.py - Export a model to OpenVINO, CoreML, ONNX, and NCNN.
 
-These models are for non-commercial use only, per the NABirds Dataset Terms of Use.
+## Quickstart
+
+1. Create the dataset on disk:
+
+```bash
+python vehicle_dataset.py --output-dir vehicle-dataset
+```
+
+2. Train the model:
+
+```bash
+python train.py --data-dir vehicle-dataset
+```
+
+3. Run inference:
+
+```bash
+python infer.py path/to/image.jpg --checkpoint checkpoints/best_model.pth
+```
 
 ## Notes
 
-This repository originally used the bird species dataset found here: https://huggingface.co/datasets/chriamue/bird-species-dataset
-
-Though the dataset was larger, it was missing common species. Furthermore, the training images were possibly too "perfect" to provide good training data for identification at home feeders: the foreground targets were always in focus, and the background was blurred. This possibly made it difficult to train a model that was able to hande noise in the image.
-The images were also pre-cropped to 224x224 making transformations extra lossy.
+The training script expects an ImageFolder layout with `train/` and `test/` splits. If the Hugging Face
+Dataset only provides a train split, the export script will create a test split automatically.
