@@ -50,7 +50,7 @@ std = std.reshape(1, -1, 1, 1)
 img = (img - mean) / std
 img = img.astype(np.float32)
 
-example_input = torch.tensor(img)
+example_input = torch.from_numpy(img).to(device)
 traced_model = torch.jit.trace(model.eval(), example_input, strict=True)
 traced_model.eval()
 output_data = traced_model(example_input)
