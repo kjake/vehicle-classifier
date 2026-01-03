@@ -8,8 +8,8 @@ def test_inference():
     out = []
 
     with ncnn.Net() as net:
-        net.load_param("models/ncnn/model.ncnn.param")
-        net.load_model("models/ncnn/model.ncnn.bin")
+        net.load_param("/Users/kevin/Documents/GitHub/vehicle-classifier/models/ncnn/model.ncnn.param")
+        net.load_model("/Users/kevin/Documents/GitHub/vehicle-classifier/models/ncnn/model.ncnn.bin")
 
         with net.create_extractor() as ex:
             ex.input("in0", ncnn.Mat(in0.squeeze(0).numpy()).clone())

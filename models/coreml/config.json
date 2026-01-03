@@ -1,1 +1,41 @@
-{"input_shape": [1, 3, 224, 224], "model": "resnet", "mean": [0.485, 0.456, 0.406], "std": [0.229, 0.224, 0.225], "files": ["model.mlpackage/Manifest.json", "model.mlpackage/Data/com.apple.CoreML/weights/weight.bin", "model.mlpackage/Data/com.apple.CoreML/model.mlmodel"], "labels": {"0": "Ambulance", "1": "Barge", "2": "Bicycle", "3": "Boat", "4": "Bus", "5": "Car", "6": "Cart", "7": "Helicopter", "8": "Limousine", "9": "Motorcycle", "10": "Segway", "11": "Snowmobile", "12": "Tank", "13": "Taxi", "14": "Truck", "15": "Van"}}
+{
+  "input_shape": [
+    1,
+    3,
+    224,
+    224
+  ],
+  "model": "resnet50",
+  "mean": [
+    0.485,
+    0.456,
+    0.406
+  ],
+  "std": [
+    0.229,
+    0.224,
+    0.225
+  ],
+  "labels": {
+    "0": "Ambulance",
+    "1": "Barge",
+    "2": "Bicycle",
+    "3": "Boat",
+    "4": "Bus",
+    "5": "Car",
+    "6": "Cart",
+    "7": "Helicopter",
+    "8": "Limousine",
+    "9": "Motorcycle",
+    "10": "Segway",
+    "11": "Snowmobile",
+    "12": "Tank",
+    "13": "Taxi",
+    "14": "Truck",
+    "15": "Van"
+  },
+  "format": "coreml",
+  "files": [
+    "model.mlpackage"
+  ]
+}

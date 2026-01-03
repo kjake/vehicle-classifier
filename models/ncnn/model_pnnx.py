@@ -120,7 +120,7 @@ class Model(nn.Module):
         self.avgpool = nn.AdaptiveAvgPool2d(output_size=(1,1))
         self.fc = nn.Linear(bias=True, in_features=2048, out_features=16)
 
-        archive = zipfile.ZipFile('models/ncnn/model.pnnx.bin', 'r')
+        archive = zipfile.ZipFile('/Users/kevin/Documents/GitHub/vehicle-classifier/models/ncnn/model.pnnx.bin', 'r')
         self.convbn2d_0.bias = self.load_pnnx_bin_as_parameter(archive, 'convbn2d_0.bias', (64), 'float32')
         self.convbn2d_0.weight = self.load_pnnx_bin_as_parameter(archive, 'convbn2d_0.weight', (64,3,7,7), 'float32')
         self.convbn2d_1.bias = self.load_pnnx_bin_as_parameter(archive, 'convbn2d_1.bias', (64), 'float32')
@@ -376,7 +376,7 @@ def export_torchscript():
     v_0 = torch.rand(1, 3, 224, 224, dtype=torch.float)
 
     mod = torch.jit.trace(net, v_0)
-    mod.save("models/ncnn/model_pnnx.py.pt")
+    mod.save("/Users/kevin/Documents/GitHub/vehicle-classifier/models/ncnn/model_pnnx.py.pt")
 
 def export_onnx():
     net = Model()
@@ -386,7 +386,7 @@ def export_onnx():
     torch.manual_seed(0)
     v_0 = torch.rand(1, 3, 224, 224, dtype=torch.float)
 
-    torch.onnx.export(net, v_0, "models/ncnn/model_pnnx.py.onnx", export_params=True, operator_export_type=torch.onnx.OperatorExportTypes.ONNX_ATEN_FALLBACK, opset_version=13, input_names=['in0'], output_names=['out0'])
+    torch.onnx.export(net, v_0, "/Users/kevin/Documents/GitHub/vehicle-classifier/models/ncnn/model_pnnx.py.onnx", export_params=True, operator_export_type=torch.onnx.OperatorExportTypes.ONNX_ATEN_FALLBACK, opset_version=13, input_names=['in0'], output_names=['out0'])
 
 def export_pnnx():
     net = Model()
@@ -397,7 +397,7 @@ def export_pnnx():
     v_0 = torch.rand(1, 3, 224, 224, dtype=torch.float)
 
     import pnnx
-    pnnx.export(net, "models/ncnn/model_pnnx.py.pt", v_0)
+    pnnx.export(net, "/Users/kevin/Documents/GitHub/vehicle-classifier/models/ncnn/model_pnnx.py.pt", v_0)
 
 def export_ncnn():
     export_pnnx()

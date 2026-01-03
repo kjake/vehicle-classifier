@@ -32,7 +32,15 @@ python train.py --data-dir vehicle-dataset
 3. Run inference:
 
 ```bash
-python infer.py path/to/image.jpg --checkpoint checkpoints/best_model.pth
+python infer_portable.py /path/to/image.jpg --checkpoint checkpoints/best_model.pth
+python infer_portable.py /path/to/images --checkpoint checkpoints/resnet50_epoch_10.pth --topk 3 --json
+```
+
+4. Export model formats:
+
+```bash
+python export.py --quiet
+python export.py --formats onnx openvino --verbose
 ```
 
 ## Notes
@@ -51,5 +59,7 @@ Core ML export relies on Core ML Tools and currently works best with:
 Known-good install example:
 
 ```bash
+/opt/homebrew/opt/python@3.11/bin/python3.11 -m venv .venv
+source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```

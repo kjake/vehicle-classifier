@@ -5230,7 +5230,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="286" name="495" type="Add" version="opset1">
+		<layer id="286" name="logits" type="Add" version="opset1">
 			<data auto_broadcast="numpy" />
 			<input>
 				<port id="0" precision="FP32">
@@ -5243,13 +5243,13 @@
 				</port>
 			</input>
 			<output>
-				<port id="2" precision="FP32" names="495">
+				<port id="2" precision="FP32" names="logits">
 					<dim>1</dim>
 					<dim>16</dim>
 				</port>
 			</output>
 		</layer>
-		<layer id="287" name="495/sink_port_0" type="Result" version="opset1" output_names="495">
+		<layer id="287" name="logits/sink_port_0" type="Result" version="opset1" output_names="logits">
 			<input>
 				<port id="0" precision="FP32">
 					<dim>1</dim>
