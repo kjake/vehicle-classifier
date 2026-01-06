@@ -32,8 +32,8 @@ python train.py --data-dir vehicle-dataset
 3. Run inference:
 
 ```bash
-python infer_portable.py /path/to/image.jpg --checkpoint checkpoints/best_model.pth
-python infer_portable.py /path/to/images --checkpoint checkpoints/resnet50_epoch_10.pth --topk 3 --json
+python infer.py /path/to/image.jpg --checkpoint checkpoints/best_model.pth
+python infer.py /path/to/images --checkpoint checkpoints/resnet50_epoch_10.pth --topk 3 --json
 ```
 
 4. Export model formats:
