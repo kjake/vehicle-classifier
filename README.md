@@ -5,9 +5,9 @@ This vehicle classification model uses the DrBimmer vehicle classification datas
 https://huggingface.co/datasets/DrBimmer/vehicle-classification
 
 * vehicle_dataset.py - Download the dataset from Hugging Face and export it to an ImageFolder layout for PyTorch.
-* train.py - Simple ResNet50 trainer. Supports resume.
-* infer.py - Infer a single image given a checkpoint.
-* export.py - Export a model to OpenVINO, CoreML, ONNX, and NCNN.
+* train.py - ResNet50 trainer with optional fine-tuning, MixUp/CutMix, schedulers, and metrics export.
+* infer.py - Inference for a single image or a directory of images with optional JSON output.
+* export.py - Export a trained model to OpenVINO, CoreML, ONNX, and NCNN.
 
 ## Quickstart
 
@@ -23,18 +23,43 @@ python -m pip install -r requirements.txt
 python vehicle_dataset.py --output-dir vehicle-dataset
 ```
 
-2. Train the model:
+2. Train the model (basic):
 
 ```bash
 python train.py --data-dir vehicle-dataset
 ```
 
-3. Run inference:
+Optional training examples:
+
+```bash
+# Resume from a checkpoint, use cosine LR, and write metrics
+python train.py --data-dir vehicle-dataset \
+  --resume checkpoints/epoch_05.pth \
+  --scheduler cosine \
+  --write-metrics --metrics-out checkpoints/metrics.json
+
+# Enable MixUp + CutMix with a preset, unfreeze all layers, and use larger inputs
+python train.py --data-dir vehicle-dataset \
+  --img-size 320 \
+  --unfreeze all --unfreeze-epoch 0 \
+  --aug mixup0.2+cutmix1.0@p0.6
+
+# Switch device explicitly and enable eval-time TTA
+python train.py --data-dir vehicle-dataset --device cuda --tta
+```
+
+3. Run inference (single image or directory):
 
 ```bash
 python infer.py /path/to/image.jpg --checkpoint checkpoints/best_model.pth
 python infer.py /path/to/images --checkpoint checkpoints/resnet50_epoch_10.pth --topk 3 --json
 ```
+
+Inference notes:
+
+* `--classmap` defaults to `./classmap.json`, or `classmap.json` next to the checkpoint if present.
+* Use `--device auto|cpu|cuda|mps` to select the compute device.
+* `--json` emits machine-readable output; `--debug` prints checkpoint metadata.
 
 4. Export model formats:
 
@@ -43,10 +68,17 @@ python export.py --quiet
 python export.py --formats onnx openvino --verbose
 ```
 
+Export notes:
+
+* `--checkpoint` supports either a raw `state_dict` or a dict containing `model_state_dict`.
+* `--input-size` and `--batch` control the dummy input shape for exports.
+* Use `--openvino-fp16` or `--openvino-fp32` to override the platform default.
+* `--smoke-test` runs a dummy forward pass and prints the top-1 label.
+
 ## Notes
 
 The training script expects an ImageFolder layout with `train/` and `test/` splits. If the Hugging Face
-Dataset only provides a train split, the export script will create a test split automatically.
+dataset only provides a train split, the dataset export script will create a test split automatically.
 
 ## Core ML export requirements
 
