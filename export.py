@@ -72,8 +72,14 @@ def _load_labels(classmap_path: Path) -> Dict[str, str]:
 
 
 def _build_model(num_classes: int, model_name: str = "resnet50") -> torch.nn.Module:
+    # Exports use a stable basename ("resnet") in config.json, but the architecture is ResNet-50.
+    # Accept "resnet" as an alias for "resnet50" to keep CLI/context usage simple.
+    if model_name == "resnet":
+        model_name = "resnet50"
     if model_name != "resnet50":
-        raise ValueError(f"Unsupported model_name={model_name!r} (only 'resnet50' in this script)")
+        raise ValueError(
+            f"Unsupported model_name={model_name!r} (supported: 'resnet' alias or 'resnet50')"
+        )
     model = models.resnet50(weights="DEFAULT")
     model.fc = torch.nn.Linear(model.fc.in_features, num_classes)
     return model
@@ -166,6 +172,7 @@ def export_openvino(ctx: ExportContext) -> None:
 
     LOG.info("Converting to OpenVINO -> %s", path)
     ov_model = ov.convert_model(str(onnx_path))
+
     ov.save_model(ov_model, str(path / "model.xml"), compress_to_fp16=ctx.openvino_fp16)
 
     base = _base_config(ctx)
@@ -209,9 +216,31 @@ def export_coreml(ctx: ExportContext, model: torch.nn.Module) -> None:
     )
     mlmodel.save(str(path / "model.mlpackage"))
 
-    # Files list is primarily informative; content varies by Core ML tooling/version.
+    # Record specific artifacts inside the .mlpackage so downstream tooling can validate/ship them.
+    mlpkg = path / "model.mlpackage"
+    files: List[str] = []
+    if mlpkg.exists():
+        manifest = mlpkg / "Manifest.json"
+        if manifest.exists():
+            files.append(manifest.relative_to(path).as_posix())
+
+        # Prefer the conventional Core ML file name if present.
+        mlmodel_paths = sorted(mlpkg.rglob("*.mlmodel"))
+        preferred = [p for p in mlmodel_paths if p.name == "model.mlmodel"]
+        if preferred:
+            files.append(preferred[0].relative_to(path).as_posix())
+        elif mlmodel_paths:
+            files.append(mlmodel_paths[0].relative_to(path).as_posix())
+
+        # Capture weight blobs when present (coremltools 7.x typically writes weights/*.bin).
+        for p in sorted(mlpkg.rglob("weights/*.bin")):
+            files.append(p.relative_to(path).as_posix())
+
+    if not files:
+        files = ["model.mlpackage"]
+
     base = _base_config(ctx)
-    _write_config(path, base, files=["model.mlpackage"], fmt="coreml")
+    _write_config(path, base, files=files, fmt="coreml")
 
 
 def export_ncnn(ctx: ExportContext, model: torch.nn.Module) -> None:
@@ -262,14 +291,6 @@ def export_ncnn(ctx: ExportContext, model: torch.nn.Module) -> None:
         param_src.replace(param_dst)
     if bin_src != bin_dst:
         bin_src.replace(bin_dst)
-
-
-    # pnnx outputs *.ncnn.param/bin alongside the input model.pt by default.
-    input_shape_str = "[" + ",".join(str(x) for x in ctx.input_shape) + "]"
-    pt_path_resolved = pt_path.resolve()
-    cmd = [pnnx, str(pt_path_resolved), f"inputshape={input_shape_str}"]
-    LOG.info("Converting to NCNN via pnnx -> %s", path)
-    _run_cmd(cmd, quiet=ctx.quiet, cwd=path)
 
     base = _base_config(ctx)
     # The usual pnnx outputs
@@ -341,7 +362,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         mean=IMAGENET_MEAN,
         std=IMAGENET_STD,
         labels=labels,
-        model_name="resnet50",
+        model_name="resnet",
         opset=args.opset,
         openvino_fp16=openvino_fp16,
         quiet=args.quiet,

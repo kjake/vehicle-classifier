@@ -5,7 +5,7 @@
     224,
     224
   ],
-  "model": "resnet50",
+  "model": "resnet",
   "mean": [
     0.485,
     0.456,
@@ -36,6 +36,8 @@
   },
   "format": "coreml",
   "files": [
-    "model.mlpackage"
+    "model.mlpackage/Manifest.json",
+    "model.mlpackage/Data/com.apple.CoreML/model.mlmodel",
+    "model.mlpackage/Data/com.apple.CoreML/weights/weight.bin"
   ]
 }
