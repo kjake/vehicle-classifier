@@ -106,4 +106,4 @@ ReLU                     relu_104                 1 1 117 118
 Pooling                  gap_0                    1 1 118 119 0=1 4=1
 Reshape                  reshape_105              1 1 119 120 0=1 1=1 2=-1
 Flatten                  flatten_106              1 1 120 121
-InnerProduct             linear_54                1 1 121 out0 0=16 1=1 2=32768
+InnerProduct             linear_54                1 1 121 out0 0=7 1=1 2=14336

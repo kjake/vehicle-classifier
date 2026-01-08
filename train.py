@@ -122,7 +122,7 @@ def parse_args() -> TrainConfig:
     p.add_argument("--write-metrics", action="store_true",
                    help="Write confusion matrix + per-class metrics to --metrics-out at end.")
 
-    p.add_argument("--best-metric", choices=["loss", "acc"], default="loss",
+    p.add_argument("--best-metric", choices=["loss", "acc"], default="acc",
                    help="Which metric to use for selecting the best checkpoint and final metrics export.")
     p.add_argument("--metrics-out", type=Path, default=Path("checkpoints/metrics.json"))
     p.add_argument("--run-name", type=str, default="", help="Optional run name suffix for saved metrics/ckpts")

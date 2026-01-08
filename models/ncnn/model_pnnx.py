@@ -118,7 +118,7 @@ class Model(nn.Module):
         self.convbn2d_52 = nn.Conv2d(bias=True, dilation=(1,1), groups=1, in_channels=512, kernel_size=(1,1), out_channels=2048, padding=(0,0), padding_mode='zeros', stride=(1,1))
         self.pnnx_unique_31 = nn.ReLU()
         self.avgpool = nn.AdaptiveAvgPool2d(output_size=(1,1))
-        self.fc = nn.Linear(bias=True, in_features=2048, out_features=16)
+        self.fc = nn.Linear(bias=True, in_features=2048, out_features=7)
 
         archive = zipfile.ZipFile('/Users/kevin/Documents/GitHub/vehicle-classifier/models/ncnn/model.pnnx.bin', 'r')
         self.convbn2d_0.bias = self.load_pnnx_bin_as_parameter(archive, 'convbn2d_0.bias', (64), 'float32')
@@ -227,8 +227,8 @@ class Model(nn.Module):
         self.convbn2d_51.weight = self.load_pnnx_bin_as_parameter(archive, 'convbn2d_51.weight', (512,512,3,3), 'float32')
         self.convbn2d_52.bias = self.load_pnnx_bin_as_parameter(archive, 'convbn2d_52.bias', (2048), 'float32')
         self.convbn2d_52.weight = self.load_pnnx_bin_as_parameter(archive, 'convbn2d_52.weight', (2048,512,1,1), 'float32')
-        self.fc.bias = self.load_pnnx_bin_as_parameter(archive, 'fc.bias', (16), 'float32')
-        self.fc.weight = self.load_pnnx_bin_as_parameter(archive, 'fc.weight', (16,2048), 'float32')
+        self.fc.bias = self.load_pnnx_bin_as_parameter(archive, 'fc.bias', (7), 'float32')
+        self.fc.weight = self.load_pnnx_bin_as_parameter(archive, 'fc.weight', (7,2048), 'float32')
         archive.close()
 
     def load_pnnx_bin_as_parameter(self, archive, key, shape, dtype, requires_grad=True):

@@ -1,6 +1,6 @@
 # Vehicle Classification Model
 
-This vehicle classification model uses the DrBimmer vehicle classification dataset hosted on Hugging Face.
+This vehicle classification model uses the DrBimmer vehicle classification dataset hosted on Hugging Face. This project uses an augmented version of the dataset, and the label set differs from the original.
 
 https://huggingface.co/datasets/DrBimmer/vehicle-classification
 
@@ -8,6 +8,24 @@ https://huggingface.co/datasets/DrBimmer/vehicle-classification
 * train.py - ResNet50 trainer with optional fine-tuning, MixUp/CutMix, schedulers, and metrics export.
 * infer.py - Inference for a single image or a directory of images with optional JSON output.
 * export.py - Export a trained model to OpenVINO, CoreML, ONNX, and NCNN.
+
+## Class map (augmented dataset)
+
+This repository uses the following 7-class label set (the `classmap.json` included with the augmented dataset):
+
+```json
+{
+  "0": "Bus",
+  "1": "Car",
+  "2": "Jeep",
+  "3": "Motorcycle",
+  "4": "SUV",
+  "5": "Truck",
+  "6": "Van"
+}
+```
+
+Ensure you use the matching `classmap.json` for the checkpoint you are running or exporting.
 
 ## Quickstart
 
@@ -57,7 +75,7 @@ python infer.py /path/to/images --checkpoint checkpoints/resnet50_epoch_10.pth -
 
 Inference notes:
 
-* `--classmap` defaults to `./classmap.json`, or `classmap.json` next to the checkpoint if present.
+* `--classmap` defaults to `./classmap.json`, or `classmap.json` next to the checkpoint if present. With the augmented dataset, use the updated 7-class map shown above (or the one shipped alongside your checkpoint).
 * Use `--device auto|cpu|cuda|mps` to select the compute device.
 * `--json` emits machine-readable output; `--debug` prints checkpoint metadata.
 

@@ -1,18 +1,9 @@
 {
-  "0": "Ambulance",
-  "1": "Barge",
-  "2": "Bicycle",
-  "3": "Boat",
-  "4": "Bus",
-  "5": "Car",
-  "6": "Cart",
-  "7": "Helicopter",
-  "8": "Limousine",
-  "9": "Motorcycle",
-  "10": "Segway",
-  "11": "Snowmobile",
-  "12": "Tank",
-  "13": "Taxi",
-  "14": "Truck",
-  "15": "Van"
+  "0": "Bus",
+  "1": "Car",
+  "2": "Jeep",
+  "3": "Motorcycle",
+  "4": "SUV",
+  "5": "Truck",
+  "6": "Van"
 }
